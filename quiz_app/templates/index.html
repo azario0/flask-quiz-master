@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Welcome to the Quiz{% endblock %}
+
+{% block content %}
+<div class="text-center p-5 rounded shadow-lg bg-white welcome-container">
+    <h1 class="mb-4 display-4 font-weight-bold text-primary">Welcome to the Quiz!</h1>
+    <p class="lead mb-4">
+        Test your knowledge with {{ num_questions }} challenging questions.
+        Are you ready to begin?
+    </p>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    <form action="{{ url_for('start_quiz') }}" method="post">
+        <button type="submit" class="btn btn-primary btn-lg btn-start-quiz">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle-fill mr-2" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+            </svg>
+            Start Quiz
+        </button>
+    </form>
+</div>
+{% endblock %}

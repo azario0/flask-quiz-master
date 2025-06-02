@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Question {{ question_number }}{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg question-card">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Question {{ question_number }} of {{ total_questions }}</h4>
+        {% if question_data.category %}
+            <span class="badge badge-light">{{ question_data.category }}</span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title question-text">{{ question_data.question }}</h5>
+        {% if question_data.description %}
+            <p class="card-text text-muted"><small>{{ question_data.description }}</small></p>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('show_question') }}">
+            <div class="list-group answer-options">
+                {% for key, text in answers.items() %}
+                    {% if text %} {# Only show non-null answers #}
+                    <label class="list-group-item list-group-item-action">
+                        <input type="radio" name="answer" value="{{ key }}" required class="mr-2">
+                        {{ text }}
+                    </label>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-success btn-block mt-4 btn-submit-answer">
+                Submit Answer
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill ml-2" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+    <div class="card-footer text-muted">
+        Difficulty: <span class="badge badge-info">{{ question_data.difficulty | capitalize }}</span>
+        {% if question_data.tags %}
+            | Tags:
+            {% for tag in question_data.tags %}
+                <span class="badge badge-secondary">{{ tag.name }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

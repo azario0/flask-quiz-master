@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Your Score{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg score-card text-center">
+    <div class="card-header bg-success text-white">
+        <h3 class="mb-0">Quiz Completed!</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Your Final Score:</h4>
+        <p class="display-3 font-weight-bold text-success">{{ score }} / {{ total_questions }}</p>
+        {% set percentage = (score / total_questions * 100) if total_questions > 0 else 0 %}
+        <div class="progress mb-3" style="height: 30px;">
+            <div class="progress-bar {% if percentage >= 75 %}bg-success{% elif percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}"
+                 role="progressbar" style="width: {{ percentage }}%;"
+                 aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                {{ "%.0f"|format(percentage) }}%
+            </div>
+        </div>
+
+        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg mt-3 btn-restart-quiz">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-clockwise mr-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+            </svg>
+            Play Again
+        </a>
+    </div>
+</div>
+
+{% if user_answers_review %}
+<div class="mt-5 review-section">
+    <h3 class="mb-3 text-center">Review Your Answers</h3>
+    {% for item in user_answers_review %}
+    <div class="card mb-3 {% if item.is_correct %}border-success{% else %}border-danger{% endif %}">
+        <div class="card-body">
+            <h5 class="card-title">{{ loop.index }}. {{ item.question_text }}</h5>
+            <p class="card-text">
+                Your answer: <span class="badge {% if item.is_correct %}badge-success{% else %}badge-danger{% endif %}">{{ item.user_answer }}</span>
+            </p>
+            {% if not item.is_correct %}
+            <p class="card-text">
+                Correct answer: <span class="badge badge-info">{{ item.correct_answer_text }}</span>
+            </p>
+            {% endif %}
+            {% if item.explanation %}
+            <p class="card-text text-muted"><small><strong>Explanation:</strong> {{ item.explanation }}</small></p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
